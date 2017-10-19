@@ -1,0 +1,63 @@
+﻿@model WebApplication1.Identity.Mine.Models.ClaimInfoEditModel
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{ ViewBag.Title = "Edit Role";}
+
+@Html.ValidationSummary()
+@using (Html.BeginForm())
+{
+    <input type="hidden" name="claimId" value="@Model.ClaimInfo.Id" />
+    <div class="panel panel-primary">
+        <div class="panel-heading">Add To Issuer:@Model.ClaimInfo.Issuer</div>
+        <div class="panel-heading">ClaimType To:@Model.ClaimInfo.ClaimType</div>
+        <div class="panel-heading">Value To:@Model.ClaimInfo.Value</div>
+        <table class="table table-striped">
+            @if (!Model.NonMembers.Any())
+            {
+                <tr><td colspan="2">All roles Are Members</td></tr>
+            }
+            else
+            {
+                <tr><td>User ID</td><td>Add To Role</td></tr>
+                foreach (var role in Model.NonMembers)
+                {
+                    <tr>
+                        <td>@role.Name</td>
+                        <td>
+                            <input type="checkbox" name="IdsToAdd" value="@role.Id">
+                        </td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">Remove from Issuer:@Model.ClaimInfo.Issuer</div>
+        <div class="panel-heading">ClaimType from:@Model.ClaimInfo.ClaimType</div>
+        <div class="panel-heading">Value from:@Model.ClaimInfo.Value</div>
+        <table class="table table-striped">
+            @if (!Model.Members.Any())
+            {
+                <tr><td colspan="2">No Roles Are Members</td></tr>
+            }
+            else
+            {
+                <tr><td>User ID</td><td>Remove From Role</td></tr>
+                foreach (var role in Model.Members)
+                {
+                    <tr>
+                        <td>@role.Name</td>
+                        <td>
+                            <input type="checkbox" name="IdsToDelete" value="@role.Id">
+                        </td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-default" })
+}

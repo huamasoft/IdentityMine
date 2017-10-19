@@ -1,0 +1,57 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using WebApplication1.Identity.Mine.Infrastructure
+@model IEnumerable<Data.Identity.Mine.Entity.ClaimInfo>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{ ViewBag.Title = "Roles"; }
+
+<div class="panel panel-primary">
+    <div class="panel-heading">Roles</div>
+    <table class="table table-striped">
+
+        <tr><th>ID</th><th>Issuer</th><th>MethodTypeValue</th><th>Value</th><th>Roles</th><th>操作</th></tr>
+        @if (!Model.Any())
+        {
+            <tr><td colspan="4" class="text-center">No Claims</td></tr>
+        }
+        else
+        {
+            foreach (var claimInfo in Model)
+            {
+                <tr>
+                    <td>@claimInfo.Id</td>
+                    <td>@claimInfo.Issuer</td>
+                    <td>@claimInfo.MethodTypeValue</td>
+                    <td>@claimInfo.Value</td>
+                    <td>
+                        @if (claimInfo.AppRoles == null || claimInfo.AppRoles.Count == 0)
+                        {
+                            @: No Claim in Role
+                        }
+                        else
+                        {
+                            <p>
+                                @string.Join(", ", claimInfo.AppRoles.Select(x => x.Name))
+                            </p>
+                        }
+                    </td>
+                    <td>
+                        @using (Html.BeginForm("Delete", "RoleAdmin",
+                            new { id = claimInfo.Id }))
+                        {
+                            @Html.ActionLink("Edit", "Edit", new { id = claimInfo.Id }, new { @class = "btn btn-primary btn-xs" })
+                            <button class="btn btn-danger btn-xs" type="submit">Delete</button>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+</div>
+@*@Html.ActionLink("Create", "Create", null, new { @class = "btn btn-primary" })*@
+
